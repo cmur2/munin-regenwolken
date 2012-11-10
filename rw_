@@ -1,0 +1,116 @@
+#!/usr/bin/env ruby
+
+# Source: https://github.com/cmur2/munin-regenwolken
+
+#
+# Example usage:
+#  Do
+#    ln -s /path/to/rw_ rw_<option>
+#  where <option> is one of users|files|size|hits
+#
+# Example config:
+#  [rw_*]
+#    env.url http://rw.example.org/
+#
+
+require 'csv'
+require 'open-uri'
+
+script = File.basename($0)
+@option = script.gsub('rw_', '')
+@cmd = ARGV[0]
+
+# open stderr
+$stderr = IO.new(2, "w")
+
+def uri
+	ENV['url'] + '?format=csv'
+end
+
+raw_data = open(uri).read
+# take only first row since we've given only one symbol
+csv_data = CSV.parse(raw_data)
+
+puts csv_data.inspect
+
+def echo_users(val)
+	case @cmd
+	when 'config'
+		puts "graph_title Registered users (#{ENV['url']})"
+		puts "graph_args --lower-limit 0"
+		puts "graph_vlabel users"
+		puts "graph_category regenwolken"
+		puts "graph_scale no"
+		puts "graph_info This graph shows the number of registered users."
+		puts "last.label registered users"
+		puts "last.info Number of registered users on #{ENV['url']}"
+		puts "last.type GAUGE"
+	else
+		puts "last.value #{val}"
+	end
+end
+
+def echo_files(val)
+	case @cmd
+	when 'config'
+		puts "graph_title Files (#{ENV['url']})"
+		puts "graph_args --lower-limit 0"
+		puts "graph_vlabel files"
+		puts "graph_category regenwolken"
+		puts "graph_scale no"
+		puts "graph_info This graph shows the number of hosted files."
+		puts "last.label files"
+		puts "last.info Number of hosted files on #{ENV['url']}"
+		puts "last.type GAUGE"
+	else
+		puts "last.value #{val}"
+	end
+end
+
+def echo_size(val)
+	case @cmd
+	when 'config'
+		puts "graph_title Database size (#{ENV['url']})"
+		puts "graph_args --lower-limit 0"
+		puts "graph_vlabel bytes"
+		puts "graph_category regenwolken"
+		puts "graph_scale no"
+		puts "graph_info This graph shows the size of all data stored in the database."
+		puts "last.label database size"
+		puts "last.info Size of all database on #{ENV['url']}"
+		puts "last.type GAUGE"
+	else
+		puts "last.value #{val}"
+	end
+end
+
+def echo_hits(val)
+	case @cmd
+	when 'config'
+		puts "graph_title Hits (#{ENV['url']})"
+		puts "graph_args --lower-limit 0"
+		puts "graph_vlabel hits"
+		puts "graph_category regenwolken"
+		puts "graph_scale no"
+		puts "graph_info This graph shows the number of items served."
+		puts "last.label hits"
+		puts "last.info Number of items served on #{ENV['url']}"
+		puts "last.type GAUGE"
+	else
+		puts "last.value #{val}"
+	end
+end
+
+case @option
+when 'users'
+	echo_users(csv_data[0][1])
+when 'files'
+	echo_files(csv_data[1][1])
+when 'size'
+	echo_size(csv_data[2][1])
+when 'hits'
+	echo_hits(csv_data[3][1])
+else
+	$stderr.puts "Unknown option #{@option} for rw_!"
+	exit 1
+end
