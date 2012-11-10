@@ -31,8 +31,6 @@ raw_data = open(uri).read
 # take only first row since we've given only one symbol
 csv_data = CSV.parse(raw_data)
 
-puts csv_data.inspect
-
 def echo_users(val)
 	case @cmd
 	when 'config'
@@ -42,11 +40,11 @@ def echo_users(val)
 		puts "graph_category regenwolken"
 		puts "graph_scale no"
 		puts "graph_info This graph shows the number of registered users."
-		puts "last.label registered users"
-		puts "last.info Number of registered users on #{ENV['url']}"
-		puts "last.type GAUGE"
+		puts "users.label registered users"
+		puts "users.info Number of registered users on #{ENV['url']}"
+		puts "users.type GAUGE"
 	else
-		puts "last.value #{val}"
+		puts "users.value #{val}"
 	end
 end
 
@@ -59,11 +57,11 @@ def echo_files(val)
 		puts "graph_category regenwolken"
 		puts "graph_scale no"
 		puts "graph_info This graph shows the number of hosted files."
-		puts "last.label files"
-		puts "last.info Number of hosted files on #{ENV['url']}"
-		puts "last.type GAUGE"
+		puts "files.label files"
+		puts "files.info Number of hosted files on #{ENV['url']}"
+		puts "files.type GAUGE"
 	else
-		puts "last.value #{val}"
+		puts "files.value #{val}"
 	end
 end
 
@@ -76,11 +74,11 @@ def echo_size(val)
 		puts "graph_category regenwolken"
 		puts "graph_scale no"
 		puts "graph_info This graph shows the size of all data stored in the database."
-		puts "last.label database size"
-		puts "last.info Size of all database on #{ENV['url']}"
-		puts "last.type GAUGE"
+		puts "size.label database size"
+		puts "size.info Size of all database on #{ENV['url']}"
+		puts "size.type GAUGE"
 	else
-		puts "last.value #{val}"
+		puts "size.value #{val}"
 	end
 end
 
@@ -93,11 +91,11 @@ def echo_hits(val)
 		puts "graph_category regenwolken"
 		puts "graph_scale no"
 		puts "graph_info This graph shows the number of items served."
-		puts "last.label hits"
-		puts "last.info Number of items served on #{ENV['url']}"
-		puts "last.type GAUGE"
+		puts "hits.label hits"
+		puts "hits.info Number of items served on #{ENV['url']}"
+		puts "hits.type GAUGE"
 	else
-		puts "last.value #{val}"
+		puts "hits.value #{val}"
 	end
 end
 
